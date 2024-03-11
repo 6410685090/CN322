@@ -3,19 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="../../static/cryptoweb/signup.css">
+    <title>Sign Up</title>
 </head>
 <body>
     <form action="{% url 'passenc' %}" method="post">
         {% csrf_token %}
-        <h1>Create account</h1>
-        <label for="username">Username</label>
-        <input type="text" name="username">
-        <label for="password">Password</label>
-        <input type="password" name="password">
-        <button type="submit">submit</button>
+        <div class="box">
+            <h1>Create account</h1>
+        </div>
+        <div class="box">
+            <label for="username">Username</label>
+            <input type="text" name="username">
+        </div>
+        <div class="box">
+            <label for="password">Password</label>
+            <input type="password" name="password">
+        </div>
+        <div class="box">
+            <button type="submit">Submit</button>
+        </div>
+        <div class="box">
+            <a href="/" class="back">Back</a>
+        </div>
     </form>
-    <br>
-    <a href="/">back</a>
+    
 </body>
 </html>
