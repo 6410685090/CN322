@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/cryptoweb/signup.css">
+    <title>Message</title>
+</head>
+<body>
+    <form action="{% url 'digital' %}" method="post">
+        {% csrf_token %}
+        <div class="box">
+            <label for="">Send To</label>
+            <select name="" id="">
+                {% for user in alluser %}
+                    <option value="{{user.id}}">{{user.username}}</option>
+                    {% empty %}
+                    <option value="" disabled>Account not available</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="box">
+            <label for="">Message</label>
+            <input type="text">
+        </div>
+        <div class="box">
+            <button type="submit">Send</button>
+        </div>
+    </form>
+    <div class="box">
+        <p>Inbox</p>
+    </div>
+</body>
+</html>

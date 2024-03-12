@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Account
+from django.contrib.auth.models import User
 # Create your views here.
 
 def index(request):
@@ -13,6 +14,19 @@ def passenc(request):
             return render(request , 'cryptoweb/signup.html',{
                 'message' : 'Username already exists.'
             })
-        Account.objects.create(username=username,password=password)
+        random_public_key = "test" # do a random func -----------------------------
+        random_private_key = 'test' # do a random func -----------------------------
+        user = User.objects.create_user(username=username,password=password)
+        Account.objects.create(username=username,
+                               password=password,
+                               public_key=random_public_key,
+                               private_key=random_private_key,
+                               user=user)
         Account.save
+        user.save
+        
+
     return render(request , 'cryptoweb/signup.html')
+
+def digital(request):
+    return render(request, 'cryptoweb/digital_signature.html',{ 'alluser' : User.objects.all})
