@@ -5,6 +5,5 @@ from django.contrib.auth.models import User
 class Account(models.Model):
     username = models.CharField(max_length=64, default=None)
     password = models.CharField(max_length=512, default=None)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
     public_key = models.CharField(max_length=512, default=None)
     private_key = models.CharField(max_length=512, default=None)
