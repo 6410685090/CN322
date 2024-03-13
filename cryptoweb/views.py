@@ -1,12 +1,13 @@
-from django.shortcuts import render
-from .models import Account
+from django.shortcuts import render , redirect
+from .models import Account , Messages
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 
 def index(request):
     return render(request , 'cryptoweb/index.html')
 
-def passenc(request):
+def signup(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -20,13 +21,48 @@ def passenc(request):
         Account.objects.create(username=username,
                                password=password,
                                public_key=random_public_key,
-                               private_key=random_private_key,
-                               user=user)
+                               private_key=random_private_key,)
         Account.save
         user.save
-        
-
     return render(request , 'cryptoweb/signup.html')
 
-def digital(request):
-    return render(request, 'cryptoweb/digital_signature.html',{ 'alluser' : User.objects.all})
+def sendmessage(request):
+    if request.user.is_authenticated:
+        messages = Messages.objects.filter(receiver=request.user.username)
+        if request.method == "POST":
+            sender = request.user.username
+            receiver = request.POST['receiver']
+            message = request.POST['message']
+            # hashmessage = 
+            Messages.objects.create(sender=sender,receiver=receiver,message=message)
+
+        return render(request, 'cryptoweb/digital_signature.html',
+                    { 'alluser' : User.objects.all,
+                        'messages' : messages,
+                    })
+    else:
+        return render(request, 'cryptoweb/signin.html')
+    
+
+def signin(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)  
+            return redirect('home')
+        
+        else:
+            return render(request, 'cryptoweb/signin.html', {
+                'message': 'Invalid credentials.'
+            })
+    return render(request, 'cryptoweb/signin.html')
+
+def logout_view(request):
+    logout(request)
+    return render(request, 'cryptoweb/index.html', {
+        'message': 'Logged out'
+    })

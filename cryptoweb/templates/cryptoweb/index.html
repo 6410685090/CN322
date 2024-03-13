@@ -8,9 +8,17 @@
 </head>
 <body>
     <div class="container">
-        <a href="{% url 'passenc' %}">Password Encrypt</a>
+        <a href="{% url 'signup' %}">Password Encrypt</a>
         <a href="{% url 'digital' %}">Digital Signature</a>
         <a href="">RSA</a>
+        {% if user.is_authenticated %}        
+        <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+        <a href="{% url 'signin' %}">Sign in</a>
+        {% endif %}
     </div>
+    {% if message %}
+        <script>alert(message)</script>
+    {% endif %}
 </body>
 </html>

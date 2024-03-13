@@ -7,10 +7,10 @@
     <title>Sign Up</title>
 </head>
 <body>
-    <form action="{% url 'signup' %}" method="post">
+    <form action="{% url 'signin' %}" method="post">
         {% csrf_token %}
         <div class="box">
-            <h1>Create account</h1>
+            <h1>Sign in</h1>
         </div>
         <div class="box">
             <label for="username">Username</label>
@@ -27,6 +27,8 @@
             <a href="/" class="back">Back</a>
         </div>
     </form>
-    
+    {% if message %}
+        <script>alert(message)</script>
+    {% endif %}
 </body>
 </html>

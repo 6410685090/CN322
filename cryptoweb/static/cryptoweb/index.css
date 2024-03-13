@@ -18,7 +18,6 @@ body{margin: 0;background-color: var(--c5);font-family: var(--font);}
     flex-direction: column;
     background-color: var(--c1);
     width: 400px;
-    height: 300px;
     border-radius: 10px;
 }
 a{

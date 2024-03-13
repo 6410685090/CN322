@@ -5,6 +5,7 @@
     --c4: #B6CFB6;
     --c5: #97C1A9;
     --font: Arial, Helvetica, sans-serif;
+    --box-width: 350px;
 }
 body {
     margin: 0;
@@ -13,14 +14,17 @@ body {
     flex-direction: column;
     justify-content: center;
     background-color: var(--c5);
-    height: 80dvh;
     font-family: var(--font);
 }
 
 form {
+    margin-top: 10dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: var(--c1);
+    width: var(--box-width);
+    border-radius: 10px;
 }
 
 .box {
@@ -52,11 +56,48 @@ a:hover{
     background-color: var(--c3);
 }
 
-label{
-    margin-right: 15px;
-}
-
 input{
     border: none;
     border-radius: 5px;
+}
+
+.container{
+    margin-top: 3dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--c1);
+    width: var(--box-width);
+    border-radius: 10px;
+}
+
+.container p:first-child {
+    align-self: center;
+}
+
+.p{
+    margin-left: 10px
+}
+
+span{
+    display: flex;
+    flex-direction: row;
+}
+.customCheckboxLabel {
+    display: inline-block;
+    margin-left: 10px;
+    width: 15px; 
+    height: 15px; 
+    border: 1px solid #aaa;
+    cursor: auto;
+    align-self: center;
+    justify-self: center;
+}
+input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: not-allowed; 
+}
+
+input[type="checkbox"]:checked + .customCheckboxLabel {
+    background-color: palegreen; 
 }
