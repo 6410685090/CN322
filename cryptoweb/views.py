@@ -36,6 +36,8 @@ def sendmessage(request):
             # hashmessage = 
             Messages.objects.create(sender=sender,receiver=receiver,message=message)
 
+        # check message method
+
         return render(request, 'cryptoweb/digital_signature.html',
                     { 'alluser' : User.objects.all,
                         'messages' : messages,
@@ -66,3 +68,21 @@ def logout_view(request):
     return render(request, 'cryptoweb/index.html', {
         'message': 'Logged out'
     })
+
+def sendmessagersa(request):
+    if request.user.is_authenticated:
+        messages = Messages.objects.all
+        if request.method == "POST":
+            sender = request.user.username
+            receiver = request.POST['receiver']
+            message = request.POST['message']
+            # RSA encrypt method 
+            Messages.objects.create(sender=sender,receiver=receiver,message=message)
+
+        # RSA decrypt method
+
+        return render(request, 'cryptoweb/rsa.html',
+                    { 'alluser' : User.objects.all,
+                        'messages' : messages,
+                    })
+    return render(request, 'cryptoweb/rsa.html')

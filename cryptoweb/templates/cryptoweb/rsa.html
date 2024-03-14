@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/cryptoweb/digital.css">
+    <title>MessageRSA</title>
+</head>
+<body>
+    <form action="{% url 'digital' %}" method="post">
+        {% csrf_token %}
+        <div class="box">
+            <h1>Send Message</h1>
+        </div>
+        <div class="box">
+            <label for="">Send To</label>
+            <select name="receiver" id="">
+                {% for user in alluser %}
+                    {% if user != request.user %}
+                    <option value="{{user.username}}">{{user.username}}</option>
+                    {% endif %}
+                    {% empty %}
+                    <option value="" disabled>Account not available</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="box">
+            <label for="">Message</label>
+            <input type="text" name="message">
+        </div>
+        <div class="box">
+            <button type="submit">Send</button>
+        </div>
+        <div class="box">
+            <a href="/" class="back">Back</a>
+        </div>
+    </form>
+    <div class="container">
+            <p class="first">Inbox</p>
+            {% for m in messages %}
+            <span>    
+                <p class="p">Sender : {{ m.sender }}</p>
+                <p class="p">Receiver :{{ m.receiver }}</p>    
+            </span>
+            <p class="p">{{ m.message }}</p>
+                
+            {% empty %}
+            {% endfor %}
+    </div>
+</body>
+</html>
