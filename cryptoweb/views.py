@@ -1,8 +1,11 @@
 from django.shortcuts import render , redirect
 from .models import Account , Messages
-from django.contrib.auth.models import User
+from .models import Account
 from django.contrib.auth import authenticate, login, logout
+import hashlib
+import bcrypt
 # Create your views here.
+
 
 def index(request):
     return render(request , 'cryptoweb/index.html')
@@ -11,19 +14,15 @@ def signup(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+        hashPW = hashPassword(password)
         if Account.objects.filter(username=username).exists():
             return render(request , 'cryptoweb/signup.html',{
                 'message' : 'Username already exists.'
             })
-        random_public_key = "test" # do a random func -----------------------------
-        random_private_key = 'test' # do a random func -----------------------------
-        user = User.objects.create_user(username=username,password=password)
-        Account.objects.create(username=username,
-                               password=password,
-                               public_key=random_public_key,
-                               private_key=random_private_key,)
+        # public_key, private_key = randomKey()
+        user = Account.objects.create(username=username,password=hashPW,public_key="public_key",
+                               private_key="private_key")
         Account.save
-        user.save
     return render(request , 'cryptoweb/signup.html')
 
 def sendmessage(request):
@@ -39,7 +38,7 @@ def sendmessage(request):
         # check message method
 
         return render(request, 'cryptoweb/digital_signature.html',
-                    { 'alluser' : User.objects.all,
+                    { 'alluser' : Account.objects.all,
                         'messages' : messages,
                     })
     else:
@@ -52,15 +51,27 @@ def signin(request):
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)  
-            return redirect('home')
-        
-        else:
-            return render(request, 'cryptoweb/signin.html', {
-                'message': 'Invalid credentials.'
-            })
+        try:
+            user = Account.objects.get(username=username)
+            hashPW = user.password
+            if verifyPassword(password, hashPW):
+                if user is not None:
+                    login(request, user)  
+                    return redirect('home')
+                
+                else:
+                    return render(request, 'cryptoweb/signin.html', {
+                        'message': 'Invalid credentials.'
+                    })
+            else:
+                return render(request, 'cryptoweb/signin.html', {
+                    'message': 'Invalid credentials.'
+                })
+        except:
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)  
+                return redirect('home')
     return render(request, 'cryptoweb/signin.html')
 
 def logout_view(request):
@@ -82,7 +93,20 @@ def sendmessagersa(request):
         # RSA decrypt method
 
         return render(request, 'cryptoweb/rsa.html',
-                    { 'alluser' : User.objects.all,
+                    { 'alluser' : Account.objects.all,
                         'messages' : messages,
                     })
     return render(request, 'cryptoweb/rsa.html')
+    
+def randomKey():
+    pass
+    # do a random func -----------------------------
+    
+def hashPassword(password):
+    hashPass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    return hashPass.decode('utf-8')
+
+def verifyPassword(password, hashPW):
+    password = str(password)
+    return bcrypt.checkpw(password.encode('utf-8'), hashPW.encode('utf-8'))
+    
