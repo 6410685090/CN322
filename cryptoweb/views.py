@@ -4,6 +4,7 @@ from .models import Account
 from django.contrib.auth import authenticate, login, logout
 import hashlib
 import bcrypt
+from Crypto.Util.number import getStrongPrime
 # Create your views here.
 
 
@@ -110,3 +111,32 @@ def verifyPassword(password, hashPW):
     password = str(password)
     return bcrypt.checkpw(password.encode('utf-8'), hashPW.encode('utf-8'))
     
+def RSAGenerateKey():
+    p = getStrongPrime(512)
+    q = getStrongPrime(512)
+    n = p * q
+    phi = (p-1)*(q-1)
+    e = 65537
+    d = pow(e, -1, phi)
+    public_key = (e, n)
+    private_key = (d, n)
+    return public_key, private_key
+
+public , private = RSAGenerateKey()
+
+def RSASignature(message, private_key):
+    d, n = private_key
+    signature = pow(message, d, n)
+    return signature
+
+def RSAVerify(message, signature, public_key):
+    e, n = public_key
+    return message == pow(signature, e, n)
+
+def RSACipher(message, public_key):
+    e, n = public_key
+    return pow(message, e, n)
+
+def RSADecipher(ciphertext, private_key):
+    d, n = private_key
+    return pow(ciphertext, d, n)
