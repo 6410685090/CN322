@@ -2,9 +2,9 @@ from django.shortcuts import render , redirect
 from .models import Account , Messages
 from .models import Account
 from django.contrib.auth import authenticate, login, logout
-import hashlib
+from . import RSAFunc
 import bcrypt
-from Crypto.Util.number import getStrongPrime
+
 # Create your views here.
 
 
@@ -20,23 +20,29 @@ def signup(request):
             return render(request , 'cryptoweb/signup.html',{
                 'message' : 'Username already exists.'
             })
-        # public_key, private_key = randomKey()
-        user = Account.objects.create(username=username,password=hashPW,public_key="public_key",
-                               private_key="private_key")
+        public_key , private_key , n = RSAFunc.RSAGenerateKey()
+        
+        Account.objects.create(username=username,password=hashPW,public_key=public_key,
+                               private_key=private_key,n=n)
         Account.save
     return render(request , 'cryptoweb/signup.html')
 
 def sendmessage(request):
     if request.user.is_authenticated:
+        user = request.user
         messages = Messages.objects.filter(receiver=request.user.username)
         if request.method == "POST":
             sender = request.user.username
             receiver = request.POST['receiver']
             message = request.POST['message']
-            # hashmessage = 
-            Messages.objects.create(sender=sender,receiver=receiver,message=message)
+            ciphertext = RSAFunc.RSASignature(message=message,private_key=(user.private_key,user.n))
+            Messages.objects.create(sender=sender,receiver=receiver,message=message,signature=ciphertext,checkmessage=True)
 
         # check message method
+        for m in messages:
+            thisSender = Account.objects.get(username=m.sender)
+            m.checkmessage = RSAFunc.RSAVerify(message=m.message ,signature=m.signature,public_key=(thisSender.public_key,thisSender.n) )
+        # have some error
 
         return render(request, 'cryptoweb/digital_signature.html',
                     { 'alluser' : Account.objects.all,
@@ -111,32 +117,3 @@ def verifyPassword(password, hashPW):
     password = str(password)
     return bcrypt.checkpw(password.encode('utf-8'), hashPW.encode('utf-8'))
     
-def RSAGenerateKey():
-    p = getStrongPrime(512)
-    q = getStrongPrime(512)
-    n = p * q
-    phi = (p-1)*(q-1)
-    e = 65537
-    d = pow(e, -1, phi)
-    public_key = (e, n)
-    private_key = (d, n)
-    return public_key, private_key
-
-public , private = RSAGenerateKey()
-
-def RSASignature(message, private_key):
-    d, n = private_key
-    signature = pow(message, d, n)
-    return signature
-
-def RSAVerify(message, signature, public_key):
-    e, n = public_key
-    return message == pow(signature, e, n)
-
-def RSACipher(message, public_key):
-    e, n = public_key
-    return pow(message, e, n)
-
-def RSADecipher(ciphertext, private_key):
-    d, n = private_key
-    return pow(ciphertext, d, n)
