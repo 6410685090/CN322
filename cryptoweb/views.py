@@ -42,7 +42,6 @@ def sendmessage(request):
         for m in messages:
             thisSender = Account.objects.get(username=m.sender)
             m.checkmessage = RSAFunc.RSAVerify(message=m.message ,signature=m.signature,public_key=(thisSender.public_key,thisSender.n) )
-        # have some error
 
         return render(request, 'cryptoweb/digital_signature.html',
                     { 'alluser' : Account.objects.all,
