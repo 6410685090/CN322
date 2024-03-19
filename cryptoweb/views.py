@@ -33,15 +33,20 @@ def sendmessage(request):
         messages = Messages.objects.filter(receiver=request.user.username)
         if request.method == "POST":
             sender = request.user.username
+            thissender = Account.objects.get(username=sender).getPublic_key()            
             receiver = request.POST['receiver']
+            thisReceiver = Account.objects.get(username=receiver).getPublic_key()
             message = request.POST['message']
-            ciphertext = RSAFunc.RSASignature(message=message,private_key=(user.private_key,user.n))
-            Messages.objects.create(sender=sender,receiver=receiver,message=message,signature=ciphertext,checkmessage=True)
+            ciphertext = RSAFunc.RSASignature(message=message,private_key=user.getPrivate_key())
+            Messages.objects.create(sender=sender,receiver=receiver,
+                                    message=message,signature=ciphertext,
+                                    senderPublic=str(thissender),
+                                    receiverPublic=str(thisReceiver),
+                                    checkmessage=True)
 
-        # check message method
         for m in messages:
             thisSender = Account.objects.get(username=m.sender)
-            m.checkmessage = RSAFunc.RSAVerify(message=m.message ,signature=m.signature,public_key=(thisSender.public_key,thisSender.n) )
+            m.checkmessage = RSAFunc.RSAVerify(message=m.message ,signature=m.signature,public_key=thisSender.getPublic_key() )
 
         return render(request, 'cryptoweb/digital_signature.html',
                     { 'alluser' : Account.objects.all,
@@ -50,7 +55,6 @@ def sendmessage(request):
     else:
         return render(request, 'cryptoweb/signin.html')
     
-
 def signin(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -88,27 +92,36 @@ def logout_view(request):
 
 def sendmessagersa(request):
     if request.user.is_authenticated:
-        messages = Messages.objects.all
+        messages = Messages.objects.all()
         if request.method == "POST":
             sender = request.user.username
             receiver = request.POST['receiver']
             message = request.POST['message']
-            # RSA encrypt method 
-            Messages.objects.create(sender=sender,receiver=receiver,message=message)
-
-        # RSA decrypt method
-
+            thissender = Account.objects.get(username=sender).getPublic_key()
+            thisReceiver = Account.objects.get(username=receiver).getPublic_key()
+            #hash text
+            #ciphertext = 
+            Messages.objects.create(sender=sender,receiver=receiver,
+                                    message=message,signature="None",
+                                    senderPublic=str(thissender),
+                                    receiverPublic=str(thisReceiver),
+                                    checkmessage=True)
+        newmessages = []
+        for m in messages:
+            if request.user.getPrivate_key() == eval(m.receiverPublic):
+                #un hash text
+                #message = 
+                #message.save()
+                newmessages.append(m)
+            else:
+                newmessages.append(m)
         return render(request, 'cryptoweb/rsa.html',
-                    { 'alluser' : Account.objects.all,
-                        'messages' : messages,
+                    { 'alluser' : Account.objects.all(),
+                        'messages' : newmessages,
                     })
-    return render(request, 'cryptoweb/rsa.html')
-    
-def randomKey():
-    pass
-    # do a random func -----------------------------
-    
-def hashPassword(password):
+    return render(request, 'cryptoweb/signin.html')
+
+def hashPassword(password):#
     hashPass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     return hashPass.decode('utf-8')
 
