@@ -39,17 +39,17 @@ def RSAVerify(message, signature, public_key):
     message = int.from_bytes(message.encode(), byteorder='big')
     return message == pow(signature, e, n)
 
-def RSACipher(message, public_key):
-    e, n = public_key
+def RSA_encrypt(message, key):
+    e, n = key
     e = int(e)
     n = int(n)
     message = int.from_bytes(message.encode(), byteorder='big')
     return pow(message, e, n)
 
-def RSADecipher(ciphertext, private_key):
-    d, n = private_key
+def RSA_decrypt(message, key):
+    d, n = key
     d = int(d)
     n = int(n)
-    ciphertext = int.from_bytes(ciphertext.encode(), byteorder='big')
-    return pow(ciphertext, d, n)
-
+    message = int(message)
+    decrypted_message = pow(message, d, n)
+    return decrypted_message.to_bytes((decrypted_message.bit_length() + 7) // 8, 'big').decode()

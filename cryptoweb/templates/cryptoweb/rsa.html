@@ -7,7 +7,7 @@
     <title>MessageRSA</title>
 </head>
 <body>
-    <form action="{% url 'digital' %}" method="post">
+    <form action="{% url 'rsa' %}" method="post">
         {% csrf_token %}
         <div class="box">
             <h1>Send Message</h1>
@@ -40,10 +40,9 @@
             {% for m in messages %}
             <span>    
                 <p class="p">Sender : {{ m.sender }}</p>
-                <p class="p">Receiver :{{ m.receiver }}</p>    
+                <p class="p">Receiver : {{ m.receiver }}</p>    
             </span>
-            <p class="p">{{ m.message }}</p>
-                
+            <p class="p">{{ m.message }}</p>                
             {% empty %}
             {% endfor %}
     </div>

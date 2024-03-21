@@ -68,6 +68,8 @@ input{
     background-color: var(--c1);
     width: var(--box-width);
     border-radius: 10px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .container p:first-child {
@@ -75,7 +77,10 @@ input{
 }
 
 .p{
-    margin-left: 10px
+    margin-left: 10px;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 span{

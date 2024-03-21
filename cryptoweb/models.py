@@ -16,9 +16,11 @@ class Account(AbstractUser):
 
 class Messages(models.Model):
     sender = models.CharField(max_length=64)
-    senderPublic = models.CharField(max_length=1024 ,default="") #512 is not enougt for (e,n)
-    receiverPublic =  models.CharField(max_length=1024 ,default="")
     receiver = models.CharField(max_length=64)
     message = models.CharField(max_length=512)
     signature = models.CharField(max_length=512)
     checkmessage = models.BooleanField()
+
+class PublicKey(models.Model):
+    username = models.CharField(max_length=64)
+    key = models.CharField(max_length=1024)
