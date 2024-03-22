@@ -77,10 +77,11 @@ input{
 }
 
 .p{
+    margin: 5px;
     margin-left: 10px;
-    width: 100%;
     text-overflow: ellipsis;
     overflow: hidden;
+    
 }
 
 span{
@@ -105,4 +106,7 @@ input[type="checkbox"] {
 
 input[type="checkbox"]:checked + .customCheckboxLabel {
     background-color: palegreen; 
+}
+.boxMessage{
+    margin-top: 15px;
 }

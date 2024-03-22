@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../static/cryptoweb/digital.css">
-    <title>MessageRSA</title>
+    <title>Custom Message</title>
 </head>
 <body>
-    <form action="{% url 'rsa' %}" method="post">
+    <form action="{% url 'custommessage' %}" method="post">
         {% csrf_token %}
         <div class="box">
             <h1>Send Message</h1>
         </div>
         <div class="box">
             <label for="">Send To</label>
-            <select name="receiver" id="">
+            <select name="receiver">
                 {% for user in alluser %}
                     {% if user != request.user %}
                     <option value="{{user.username}}">{{user.username}}</option>
@@ -29,6 +29,15 @@
             <input type="text" name="message">
         </div>
         <div class="box">
+            <select name="mode">
+                <option value="Sender Verify">Sender Verify</option>
+                <option value="Receiver Verify">Receiver Verify</option>
+                <option value="Both">Both</option>
+                <option value="None">None</option>
+            </select>
+        </div>
+
+        <div class="box">
             <button type="submit">Send</button>
         </div>
         <div class="box">
@@ -36,18 +45,23 @@
         </div>
     </form>
     <div class="container">
-            <p class="first">Inbox</p>
-            {% for m in messages %}
-            <div class="boxMessage">
-                <span>    
-                    <p class="p">Sender : {{ m.sender }}</p>
-                    <p class="p">Receiver : {{ m.receiver }}</p>    
-                </span>
-                <p class="p">{{ m.message }}</p>       
-            </div>         
-            {% empty %}
-            {% endfor %}
-            
-    </div>
+        <p class="first">Inbox</p>
+        {% for m in messages %}
+        <span>    
+            <p class="p">Sender : {{ m.sender }}</p>
+            <p class="p">Receiver : {{ m.receiver }}</p>    
+            <span>    
+                <input type="checkbox" id="customCheckbox" {% if m.checkmessage %}checked{% endif %} disabled="disabled">
+                <label for="customCheckbox" class="customCheckboxLabel"></label>
+            </span>
+        </span>        
+        <p class="p">{{ m.message }}</p>  
+        
+                      
+        {% empty %}
+        {% endfor %}
+</div>
+</body>
+</html>
 </body>
 </html>

@@ -38,12 +38,14 @@
     <div class="container">
             <p class="first">Inbox</p>
             {% for m in messages %}
-            <span>    
-                <input type="checkbox" id="customCheckbox" {% if m.checkmessage %}checked{% endif %} disabled="disabled">
-                <label for="customCheckbox" class="customCheckboxLabel"></label>
-                <p class="p">{{ m.message }}</p>
-            </span>
-                
+            <div class="boxMessage">
+                <p class="p">Sender : {{ m.sender }}</p>
+                <span>    
+                    <input type="checkbox" id="" {% if m.checkmessage %}checked{% endif %} disabled="disabled">
+                    <label for="customCheckbox" class="customCheckboxLabel"></label>
+                    <p class="p">{{ m.message }}</p>    
+                </span>
+            </div>
             {% empty %}
             {% endfor %}
     </div>

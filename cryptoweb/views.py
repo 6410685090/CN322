@@ -20,10 +20,10 @@ def signup(request):
             return render(request , 'cryptoweb/signup.html',{
                 'message' : 'Username already exists.'
             })
-        public_key , private_key , n = RSAFunc.RSAGenerateKey()
-        PublicKey.objects.create(username=username,key=str((public_key,n)))
+        public_key , private_key = RSAFunc.RSAGenerateKey()
+        PublicKey.objects.create(username=username,key=str(public_key))
         Account.objects.create(username=username,password=hashPW,public_key=public_key,
-                               private_key=private_key,n=n)
+                               private_key=private_key)
         Account.save
         PublicKey.save
     return render(request , 'cryptoweb/signup.html')
@@ -31,18 +31,17 @@ def signup(request):
 def sendmessage(request):
     if request.user.is_authenticated:
         user = request.user
-        messages = Messages.objects.filter(receiver=request.user.username)
+        messages = Messages.objects.filter(receiver=request.user.username,mode="None")
         if request.method == "POST":
             sender = request.user.username       
             receiver = request.POST['receiver']
             message = request.POST['message']
             signature = customhash.hash(message)
             Messages.objects.create(sender=sender,receiver=receiver,
-                                    message=message,signature=signature,                
-                                    checkmessage=True)
+                                    message=message,signature=signature)
 
         for m in messages:
-            m.checkmessage = (customhash(m.message) == m.signature)
+            m.checkmessage = (customhash.hash(m.message) == m.signature)
 
         return render(request, 'cryptoweb/digital_signature.html',
                     { 'alluser' : Account.objects.all,
@@ -88,17 +87,16 @@ def logout_view(request):
 
 def sendmessagersa(request):
     if request.user.is_authenticated:
-        messages = copy.deepcopy(Messages.objects.all()) 
+        messages = copy.deepcopy(Messages.objects.filter(mode="RSA")) 
         if request.method == "POST":
             sender = request.user.username
             receiver = request.POST['receiver']
             message = request.POST['message']
-            receiverAccount = Account.objects.get(username=receiver)
+            receiverKey = PublicKey.objects.get(username=receiver).getKey()
             signature = customhash.hash(message)
-            ciphertext = RSAFunc.RSA_encrypt(message=message,key=receiverAccount.getPublic_key())
+            ciphertext = RSAFunc.RSA_encrypt(message=message,key=receiverKey)
             Messages.objects.create(sender=sender,receiver=receiver,
-                                    message=ciphertext,signature=signature,
-                                    checkmessage=True)
+                                    message=ciphertext,signature=signature,mode="RSA")
                    
         key = request.user.getPrivate_key()
         newmessages = []
@@ -115,4 +113,67 @@ def sendmessagersa(request):
                     })
     return render(request, 'cryptoweb/signin.html')
 
+def custommessage(request):
+    if request.user.is_authenticated:
+        realMessagesObject = Messages.objects.all()
+        if request.method == "POST":
+            sender = request.user.username       
+            receiver = request.POST['receiver']
+            message = request.POST['message']
+            mode = request.POST['mode']
+
+            if mode == "Sender Verify":
+                ciphertext = RSAFunc.RSA_encrypt(message=message,key=request.user.getPrivate_key())
+            elif mode == "Receiver Verify":
+                thisReceiver = PublicKey.objects.get(username=receiver).getKey()
+                ciphertext = RSAFunc.RSA_encrypt(message=message,key=thisReceiver)
+            elif mode == "Both":
+                thisReceiver = PublicKey.objects.get(username=receiver).getKey()
+                ciphertext = RSAFunc.RSA_encrypt(message=message,key=thisReceiver)
+                ciphertext = RSAFunc.RSA_encrypt(message=ciphertext,key=request.user.getPrivate_key())
+            else:
+                ciphertext = message
+
+            signature = customhash.hash(message)
+            Messages.objects.create(sender=sender,receiver=receiver,
+                                    message=ciphertext,signature=signature,mode=mode)
+
+        for m in realMessagesObject:
+            m.checkmessage = (customhash.hash(m.message) == m.signature)
+
+        messages = copy.deepcopy(realMessagesObject) 
+        newmessages = []
+        for m in messages:
+            if m.mode == "None":
+                newmessages.append(m)
+            elif m.mode == "Sender Verify":
+                try: 
+                    Senderkey = PublicKey.objects.get(username=m.sender).getKey()
+                    m.message = RSAFunc.RSA_decrypt(message=m.message,key=Senderkey)
+                except:
+                    pass
+                newmessages.append(m)
+            elif m.mode == "Receiver Verify":
+                if m.receiver == request.user.username:
+                    Userkey = request.user.getPrivate_key()
+                    m.message = RSAFunc.RSA_decrypt(message=m.message,key=Userkey)
+                newmessages.append(m)
+            elif m.mode == "Both":
+                if m.receiver == request.user.username:
+                    Userkey = request.user.getPrivate_key()
+                    try: 
+                        Senderkey = PublicKey.objects.get(username=m.sender).getKey()
+                        m.message = RSAFunc.RSA_doubleDecrypt(message=m.message,key1=Senderkey,key2=Userkey)
+                    except:
+                        pass
+                newmessages.append(m)
+            else:
+                pass
+
+        return render(request, 'cryptoweb/custommessage.html',
+                    { 'alluser' : Account.objects.all,
+                        'messages' : newmessages,
+                    })
+    else:
+        return render(request, 'cryptoweb/signin.html')
     

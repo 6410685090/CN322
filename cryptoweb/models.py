@@ -4,23 +4,26 @@ from django.contrib.auth.models import AbstractUser
 
 class Account(AbstractUser):
     password = models.CharField(max_length=512)
-    public_key = models.CharField(max_length=512)
-    private_key = models.CharField(max_length=512)
-    n = models.CharField(max_length=512)
+    public_key = models.CharField(max_length=1024)
+    private_key = models.CharField(max_length=1024)
 
     def getPublic_key(self):
-        return (self.public_key,self.n)
+        return eval(self.public_key)
     
     def getPrivate_key(self):
-        return (self.private_key,self.n)
+        return eval(self.private_key)
 
 class Messages(models.Model):
     sender = models.CharField(max_length=64)
     receiver = models.CharField(max_length=64)
     message = models.CharField(max_length=512)
     signature = models.CharField(max_length=512)
-    checkmessage = models.BooleanField()
+    checkmessage = models.BooleanField(default=True)
+    mode = models.CharField(max_length=32,default="None")
 
 class PublicKey(models.Model):
     username = models.CharField(max_length=64)
     key = models.CharField(max_length=1024)
+
+    def getKey(self):
+        return eval(self.key)

@@ -8,7 +8,7 @@ class AccountAdmin(admin.ModelAdmin):
 
 class MessagesAdmin(admin.ModelAdmin):
     model = Messages
-    list_display = ['sender', 'receiver' , 'message']
+    list_display = ['sender', 'receiver' , 'mode']
 
 class PublikeyAdmin(admin.ModelAdmin):
     model = PublicKey
