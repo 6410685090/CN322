@@ -1,4 +1,4 @@
-:root{
+:root {
     --c1: #D4F0F0;
     --c2: #8FCACA;
     --c3: #CCE2CB;
@@ -7,6 +7,7 @@
     --font: Arial, Helvetica, sans-serif;
     --box-width: 350px;
 }
+
 body {
     margin: 0;
     display: flex;
@@ -18,7 +19,7 @@ body {
 }
 
 form {
-    margin-top: 10dvh;
+    margin-top: 10vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,38 +32,28 @@ form {
     margin: 15px;
 }
 
-button {
-    margin-bottom: 10px;
-    padding: 7px 8px;
-    border-radius: 7px;
+button, a {
+    margin-top: 10px;
+    padding: 10px 20px;
     border: none;
-    background-color: var(--c4);
+    border-radius: 7px;
     cursor: pointer;
-}
-
-button:hover{
-    background-color: var(--c3);
-}
-
-a{
-    background-color: var(--c4);
-    padding: 7px 8px;
     text-decoration: none;
     color: black;
-    border-radius: 7px;
+    transition: background-color 0.3s;
 }
 
-a:hover{
+button:hover, a:hover {
     background-color: var(--c3);
 }
 
-input{
+input {
     border: none;
     border-radius: 5px;
 }
 
-.container{
-    margin-top: 3dvh;
+.container {
+    margin-top: 3vh;
     display: flex;
     flex-direction: column;
     background-color: var(--c1);
@@ -76,37 +67,56 @@ input{
     align-self: center;
 }
 
-.p{
+.p {
     margin: 5px;
     margin-left: 10px;
     text-overflow: ellipsis;
     overflow: hidden;
-    
 }
 
-span{
+span {
     display: flex;
     flex-direction: row;
 }
+
 .customCheckboxLabel {
     display: inline-block;
     margin-left: 10px;
-    width: 15px; 
-    height: 15px; 
+    width: 15px;
+    height: 15px;
     border: 1px solid #aaa;
-    cursor: auto;
+    cursor: pointer;
     align-self: center;
     justify-self: center;
 }
+
 input[type="checkbox"] {
     position: absolute;
     opacity: 0;
-    cursor: not-allowed; 
+    cursor: pointer;
+    appearance: none;
 }
 
-input[type="checkbox"]:checked + .customCheckboxLabel {
-    background-color: palegreen; 
+input[type="checkbox"] + .customCheckboxLabel {
+    display: inline-block;
+    margin-left: 10px;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #000000;
+    cursor: pointer;
+    align-self: center;
+    justify-self: center;
+    border-radius: 50%; 
 }
-.boxMessage{
+
+input[type="checkbox"].greenCheckbox + .customCheckboxLabel {
+    background-color: green;
+}
+
+input[type="checkbox"].redCheckbox + .customCheckboxLabel {
+    background-color: red;
+  }  
+
+.boxMessage {
     margin-top: 15px;
 }

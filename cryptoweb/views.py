@@ -42,6 +42,9 @@ def sendmessage(request):
 
         for m in messages:
             m.checkmessage = (customhash.hash(m.message) == m.signature)
+            print("Message:", m.message)
+            print("Signature:", m.signature)
+            print("Check Result:", m.checkmessage)
 
         return render(request, 'cryptoweb/digital_signature.html',
                     { 'alluser' : Account.objects.all,
@@ -140,7 +143,8 @@ def custommessage(request):
 
         for m in realMessagesObject:
             m.checkmessage = (customhash.hash(m.message) == m.signature)
-
+  
+            
         messages = copy.deepcopy(realMessagesObject) 
         newmessages = []
         for m in messages:

@@ -40,8 +40,12 @@
             {% for m in messages %}
             <div class="boxMessage">
                 <p class="p">Sender : {{ m.sender }}</p>
-                <span>    
-                    <input type="checkbox" id="" {% if m.checkmessage %}checked{% endif %} disabled="disabled">
+                <span>  
+                    {% if m.checkmessage %}
+                        <input type="checkbox" class="greenCheckbox" checked>
+                    {% else %}
+                        <input type="checkbox" class="redCheckbox">
+                    {% endif %}
                     <label for="customCheckbox" class="customCheckboxLabel"></label>
                     <p class="p">{{ m.message }}</p>    
                 </span>
@@ -49,7 +53,5 @@
             {% empty %}
             {% endfor %}
     </div>
-    
-
 </body>
 </html>

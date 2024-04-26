@@ -50,18 +50,10 @@
         <span>    
             <p class="p">Sender : {{ m.sender }}</p>
             <p class="p">Receiver : {{ m.receiver }}</p>    
-            <span>    
-                <input type="checkbox" id="customCheckbox" {% if m.checkmessage %}checked{% endif %} disabled="disabled">
-                <label for="customCheckbox" class="customCheckboxLabel"></label>
-            </span>
         </span>        
-        <p class="p">{{ m.message }}</p>  
-        
-                      
+        <p class="p">{{ m.message }}</p><br>          
         {% empty %}
         {% endfor %}
 </div>
-</body>
-</html>
 </body>
 </html>
