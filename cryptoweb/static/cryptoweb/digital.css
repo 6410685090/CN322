@@ -61,6 +61,8 @@ input {
     border-radius: 10px;
     overflow: hidden;
     white-space: nowrap;
+    margin-bottom: 2%;
+    min-height: 100px;
 }
 
 .container p:first-child {

@@ -10,4 +10,5 @@ urlpatterns = [
     path('custommessage', views.custommessage, name="custommessage"),
     path('signin', views.signin, name="signin"),
     path('logout', views.logout_view, name="logout"),
+    path('messageINdb', views.messageINdb, name="messageINdb"),
 ]

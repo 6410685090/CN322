@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/cryptoweb/messageINdb.css">
+    <title>Message IN Database</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Sender</th>
+            <th>Receiver</th>
+            <th>Message</th>
+            <th>Mode</th>
+        </tr>
+        {% for m in messages %}
+        <tr>
+            <td>{{ m.sender }}</td>
+            <td>{{ m.receiver }}</td>
+            <td>{{ m.message }}</td>
+            <td>{{ m.mode }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="4">Message not available</td>
+        </tr>
+    {% endfor %}
+    </table>
+    <a href="/" class="back">Back
+</body>
+</html>

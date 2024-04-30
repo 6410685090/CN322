@@ -31,14 +31,14 @@ def signup(request):
 def sendmessage(request):
     if request.user.is_authenticated:
         user = request.user
-        messages = Messages.objects.filter(receiver=request.user.username,mode="None")
+        messages = Messages.objects.filter(receiver=request.user.username,mode="Digital Signature")
         if request.method == "POST":
             sender = request.user.username       
             receiver = request.POST['receiver']
             message = request.POST['message']
             signature = customhash.hash(message)
             Messages.objects.create(sender=sender,receiver=receiver,
-                                    message=message,signature=signature)
+                                    message=message,signature=signature,mode="Digital Signature")
 
         for m in messages:
             m.checkmessage = (customhash.hash(m.message) == m.signature)
@@ -177,4 +177,11 @@ def custommessage(request):
                     })
     else:
         return render(request, 'cryptoweb/signin.html')
-    
+
+
+def messageINdb(request):
+    messages = Messages.objects.all()
+    return render(request, 'cryptoweb/messageINdb.html',
+                { 
+                    'messages' : messages,
+                })

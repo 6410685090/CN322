@@ -18,7 +18,22 @@
         </div>
         <div class="box">
             <label for="password">Password</label>
-            <input type="password" name="password">
+            <input type="password" name="password" id="password">
+            <button id="showPassword" type="button">Show</button>
+            <script>
+                const passwordInput = document.getElementById('password');
+                const showPasswordButton = document.getElementById('showPassword');
+
+                showPasswordButton.addEventListener('click', function() {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    showPasswordButton.textContent = 'Hide';
+                } else {
+                    passwordInput.type = 'password';
+                    showPasswordButton.textContent = 'Show';
+                }
+                });
+            </script>
         </div>
         <div class="box">
             <button type="submit">Submit</button>
