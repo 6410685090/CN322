@@ -26,6 +26,7 @@ def signup(request):
                                private_key=private_key)
         Account.save
         PublicKey.save
+        return redirect('home')
     return render(request , 'cryptoweb/signup.html')
 
 def sendmessage(request):
