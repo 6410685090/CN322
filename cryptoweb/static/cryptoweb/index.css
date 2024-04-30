@@ -13,6 +13,12 @@ body {
     font-family: var(--font);
 }
 
+.header {
+    color: rgb(236, 236, 236);
+    padding: 10px 0;
+    text-align: center;
+}
+
 .container {
     position: absolute;
     top: 50%;
