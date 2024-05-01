@@ -17,7 +17,9 @@
             <select name="receiver" id="">
                 {% for user in alluser %}
                     {% if user != request.user %}
-                    <option value="{{user.username}}">{{user.username}}</option>
+                        {% if user.username != "a" %}
+                            <option value="{{user.username}}">{{user.username}}</option>
+                        {% endif %}
                     {% endif %}
                     {% empty %}
                     <option value="" disabled>Account not available</option>
@@ -26,7 +28,7 @@
         </div>
         <div class="box">
             <label for="">Message</label>
-            <input type="text" name="message">
+            <input type="text" name="message" required>
         </div>
         <div class="box">
             <button type="submit">Send</button>
