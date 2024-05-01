@@ -213,3 +213,39 @@ def test(request):
             hash_message = 'Invalid mode'
         return render(request, 'cryptoweb/test.html' , { "message" : message ,"hash_message" : hash_message , "mode" : mode})
     return render(request , 'cryptoweb/test.html')
+
+def testRSA(request):
+    alluser = Account.objects.all()
+    if request.method == 'POST':
+        message = request.POST['message']
+        mode = request.POST['mode']
+        sender = request.POST['sender']
+        receiver = request.POST['receiver']
+        signature = request.POST['signature']
+        senderPriKey = Account.objects.get(username=sender).getPrivate_key()
+        senderPubKey = Account.objects.get(username=sender).getPublic_key()
+        receiverPriKey = Account.objects.get(username=receiver).getPrivate_key()
+        receiverPubKey = Account.objects.get(username=receiver).getPublic_key()
+        if mode == 'sign':
+            hash_message = MyCryptoLib.sign(message,senderPriKey)
+        elif mode == 'verify':
+            try:
+                hash_message = MyCryptoLib.verify(message,signature,senderPubKey)
+                if not hash_message:
+                    hash_message = 'Invalid signature or plaintext'
+            except:
+                hash_message = 'Invalid signature'
+        elif mode == 'encrypt':
+            hash_message = MyCryptoLib.encrypt(message,senderPriKey)
+        elif mode == 'decrypt':
+            hash_message = MyCryptoLib.decrypt(message,senderPubKey)
+          
+        elif mode == 'doubleEncrypt':
+            hash_message = MyCryptoLib.doubleEncrypt(message,senderPubKey,receiverPriKey)
+        elif mode == 'doubleDecrypt':
+            hash_message = MyCryptoLib.doubleDecrypt(message,receiverPubKey,senderPriKey)
+        else:
+            hash_message = 'Invalid mode'
+        return render(request, 'cryptoweb/testRSA.html' , { "message" : message ,"hash_message" : hash_message , "mode" : mode , 
+                                                           'alluser' : alluser , 'sender' : sender , 'receiver' : receiver})
+    return render(request , 'cryptoweb/testRSA.html' , {'alluser' : alluser})

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test RSA function</title>
+    <link rel="stylesheet" href="../../static/cryptoweb/test.css">
+</head>
+<body>
+    <form action="{% url 'testRSA' %}" method="post">
+        <div class="inform">
+            {% csrf_token %}
+            <div>
+                <label for="message">Message</label><br>
+                <input type="text" name="message" placeholder="Plaintext" required>
+            </div>
+            <div>
+                <label for="signature">Signature (For verify mode)</label><br>
+                <input type="text" name="signature" placeholder="Signature">
+            </div>
+            <div>
+                <label for="sender">Sender</label><br>
+                <select name="sender" id="sender">
+                    {% for user in alluser %}
+                        {% if user.username != "a" %}
+                            <option value="{{user.username}}">{{user.username}}</option>
+                        {% endif %}
+                    {% empty %}
+                    <option value="" disabled>Account not available</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="receiver">Receiver</label><br>
+                <select name="receiver" id="receiver">
+                    {% for user in alluser %}
+                        {% if user.username != "a" %}
+                            <option value="{{user.username}}">{{user.username}}</option>
+                        {% endif %}
+                    {% empty %}
+                    <option value="" disabled>Account not available</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="mode">Mode</label><br>
+                <select name="mode" id="mode">
+                    <option value="sign">Digital Signature</option>
+                    <option value="verify">Verify</option>
+                    <option value="encrypt">Encryption</option>
+                    <option value="decrypt">Decryption</option>
+                </select>
+            </div>
+        </div>
+            <div>
+                <button type="submit">Submit</button>
+                <button type="button"><a href="/">Back</a></button>
+            </div>
+
+        
+    </form>
+    <div class="showBox">
+        {% if hash_message %}
+            <p>Mode <span>{{ mode }}</span> | Sender: {{ sender }} → Receiver: {{ receiver }}</p>
+            <p>Plaintext: {{ message }}</p>
+            <p>Ciphertext: {{ hash_message }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
