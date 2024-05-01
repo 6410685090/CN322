@@ -184,3 +184,32 @@ def messageINdb(request):
                 { 
                     'messages' : messages,
                 })
+
+def test(request):
+    if request.method == 'POST':
+        message = request.POST['message']
+        mode = request.POST['mode']
+        if mode == 'sha256':
+            hash_message = MyCryptoLib.hash(message)
+        elif mode == 'md5':
+            hash_message = MyCryptoLib.hash(message, mode='md5')
+        elif mode == 'sha1':
+            hash_message = MyCryptoLib.hash(message, mode='sha1')
+        elif mode == 'sha512':
+            hash_message = MyCryptoLib.hash(message, mode='sha512')
+        elif mode == 'sha3_256':
+            hash_message = MyCryptoLib.hash(message, mode='sha3_256')
+        elif mode == 'sha3_512':
+            hash_message = MyCryptoLib.hash(message, mode='sha3_512')
+        elif mode == 'whirlpool':
+            hash_message = MyCryptoLib.hash(message, mode='whirlpool')
+        elif mode == 'blake2b':
+            hash_message = MyCryptoLib.hash(message, mode='blake2b')
+        elif mode == 'blake2s':
+            hash_message = MyCryptoLib.hash(message, mode='blake2s')
+        elif mode == 'ripemd160':
+            hash_message = MyCryptoLib.hash(message, mode='ripemd160')
+        else:
+            hash_message = 'Invalid mode'
+        return render(request, 'cryptoweb/test.html' , { "message" : message ,"hash_message" : hash_message , "mode" : mode})
+    return render(request , 'cryptoweb/test.html')

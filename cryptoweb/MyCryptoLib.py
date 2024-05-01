@@ -1,5 +1,6 @@
 from .customhash import hashSha256, hashMd5, hashSha1 , hash_whirlpool,\
-    hash_blake2b, hash_blake2s, hash_ripemd160 , generate_random_hex
+    hash_blake2b, hash_blake2s, hash_ripemd160 , generate_random_hex,\
+    hashSha512, hashSha3_256, hashSha3_512
 
 from .RSAFunc import RSA_encrypt, RSA_decrypt, RSAGenerateKey , RSASignature, \
     RSAVerify, RSA_doubleDecrypt , RSA_doubleDecrypt
@@ -19,6 +20,12 @@ def hash(message, mode="sha256"):
         return hash_blake2s(message)
     elif mode == 'ripemd160':
         return hash_ripemd160(message)
+    elif mode == 'sha512':
+        return hashSha512(message)
+    elif mode == 'sha3_256':
+        return hashSha3_256(message)
+    elif mode == 'sha3_512':
+        return hashSha3_512(message)
     else:
         return KeyError("Invalid mode")
 
@@ -29,6 +36,12 @@ def hash_password(password, mode="sha256", salt=None):
         hashPassword = hashMd5(password)
     elif mode == 'sha256':
         hashPassword = hashSha256(password)
+    elif mode == 'sha512':
+        hashPassword = hashSha512(password)
+    elif mode == 'sha3_256':
+        hashPassword = hashSha3_256(password)
+    elif mode == 'sha3_512':
+        hashPassword = hashSha3_512(password)
     elif mode == 'whirlpool':
         hashPassword = hash_whirlpool(password)
     elif mode == 'blake2b':

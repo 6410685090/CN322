@@ -6,6 +6,24 @@ def hashSha256(message):
     hash_message = sha256.hexdigest()
     return hash_message
 
+def hashSha512(message):
+    sha512 = hashlib.sha512()
+    sha512.update(message.encode())
+    hash_message = sha512.hexdigest()
+    return hash_message
+
+def hashSha3_256(message):
+    sha3_256 = hashlib.sha3_256()
+    sha3_256.update(message.encode())
+    hash_message = sha3_256.hexdigest()
+    return hash_message
+
+def hashSha3_512(message):
+    sha3_512 = hashlib.sha3_512()
+    sha3_512.update(message.encode())
+    hash_message = sha3_512.hexdigest()
+    return hash_message
+
 def hashMd5(message):
     md5 = hashlib.md5()
     md5.update(message.encode())

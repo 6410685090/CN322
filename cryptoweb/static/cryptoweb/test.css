@@ -1,0 +1,63 @@
+:root {
+    --c1: #D4F0F0;
+    --c2: #8FCACA;
+    --c3: #CCE2CB;
+    --c4: #B6CFB6;
+    --c5: #97C1A9;
+    --font: Arial, Helvetica, sans-serif;
+}
+
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: var(--c5);
+    font-family: var(--font);
+}
+
+input , select{
+    margin-bottom: 15px;
+    width: 200px;
+}
+
+form {
+    background-color: var(--c1);
+    width: 350px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15%;
+}
+
+.inform{
+    margin-top: 20px;
+}
+
+button {
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.showBox{
+    margin-top: 15px;
+    background-color: var(--c1);
+    max-width: 60%;
+    overflow-wrap: break-word;
+    border-radius: 15px;
+}
+
+p {
+    margin: 20px;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+span{
+    color : palevioletred;
+}

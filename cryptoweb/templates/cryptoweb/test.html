@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test function</title>
+    <link rel="stylesheet" href="../../static/cryptoweb/test.css">
+</head>
+<body>
+    <form action="{% url 'test' %}" method="post">
+        <div class="inform">
+            {% csrf_token %}
+            <div>
+                <label for="message">Message</label><br>
+                <input type="text" name="message" required>
+            </div>
+            <div>
+                <label for="hash">Hash</label><br>
+                <select name="mode" id="mode">
+                    <option value="sha1">Sha1</option>
+                    <option value="sha256">Sha256</option>
+                    <option value="sha512">Sha512</option>
+                    <option value="sha3_256">Sha3_256</option>
+                    <option value="sha3_512">Sha3_512</option>
+                    <option value="md5">Md5</option>
+                    <option value="whirlpool">Whirlpool</option>
+                    <option value="blake2b">Blake2b</option>
+                    <option value="blake2s">Blake2s</option>
+                    <option value="ripemd160">Ripemd160</option>
+                </select>
+            </div>
+        </div>
+            <div>
+                <button type="submit">Submit</button>
+                <button type="button"><a href="/">Back</a></button>
+            </div>
+
+        
+    </form>
+    <div class="showBox">
+        {% if hash_message %}
+            <p>Hash with <span>{{ mode }}</span></p>
+            <p>Plaintext: {{ message }}</p>
+            <p>HashText: {{ hash_message }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
